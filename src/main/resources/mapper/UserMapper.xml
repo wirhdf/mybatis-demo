@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wish.mybatisdemo.dao.UserDao">
+
+    <resultMap type="com.wish.mybatisdemo.entity.User" id="UserResultMap">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="sex" column="sex"/>
+        <result property="birthday" column="birthday"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="baseColumnList">
+      id, username, password, sex, birthday, create_time, update_time
+    </sql>
+
+    <sql id="sqlWhere">
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </sql>
+
+    <!--新增-->
+    <insert id="insert" parameterType="com.wish.mybatisdemo.entity.User" keyProperty="id" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="username != null and username != ''">
+                username,
+            </if>
+            <if test="password != null and password != ''">
+                password,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="username != null and username != ''">
+                #{username},
+            </if>
+            <if test="password != null and password != ''">
+                #{password},
+            </if>
+            <if test="sex != null">
+                #{sex},
+            </if>
+            <if test="birthday != null">
+                #{birthday},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!--根据ID删除-->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from user where id = #{id}
+    </delete>
+
+    <!--更新-->
+    <update id="update" parameterType="com.wish.mybatisdemo.entity.User">
+        update user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--根据ID查询详情-->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="UserResultMap">
+        select
+        <include refid="baseColumnList"/>
+        from user
+        where id = #{id}
+    </select>
+
+    <!--列表查询-->
+    <select id="selectList" parameterType="com.wish.mybatisdemo.entity.User" resultMap="UserResultMap">
+        select
+        <include refid="baseColumnList"/>
+        from user
+        <include refid="sqlWhere"/>
+    </select>
+
+    <select id="selectMapById" parameterType="long" resultType="map">
+        SELECT id,username,password,sex FROM user WHERE id = #{id}
+    </select>
+
+    <select id="selectTest" parameterType="string" resultMap="UserResultMap">
+        SELECT * FROM user
+        <if test="s.indexOf('6') >= 0">
+          WHERE username LIKE '%${s}%'
+        </if>
+    </select>
+
+</mapper>
